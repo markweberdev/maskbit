@@ -1,0 +1,105 @@
+experiment:
+    project: "MaskBit"
+    name: "maskbit_tokenizer_12bit"
+    max_train_examples: 1_281_167 # total number of imagenet examples
+    save_every: 20_000
+    eval_every: 20_000
+    generate_every: 2000
+    log_every: 50
+    log_grad_norm_every: 100_000
+    logger: "tensorboard"
+    resume: True
+    sync_to_hdfs: True
+    init_checkpoint: ""
+    # vqgan_checkpoint: "MODEL_PATH/maskbit_tokenizer_12bit.bin"  # Only for evaluating a trained model
+
+model:
+    vq_model:
+        model_class: "vqgan+"
+        quantizer_type: "lookup-free"
+        codebook_size: 4096
+        token_size: 12
+        commitment_cost: 0.25
+        entropy_loss_weight: 0.02
+        entropy_loss_temperature: 0.01
+        entropy_gamma: 1.0
+        num_channels: 3  # rgb
+        hidden_channels: 128
+        channel_mult: [1,1,2,2,4]
+        num_resolutions: 5
+        num_res_blocks: 2
+        sample_with_conv: True
+
+    discriminator:
+        name: "VQGAN+Discriminator"
+        num_channels: 3
+        num_stages: 4
+        hidden_channels: 128
+        blur_resample: True
+        blur_kernel_size: 4
+
+
+losses:
+    quantizer_weight: 1.0
+    perceptual_loss: "resnet50"
+    perceptual_weight: 0.1
+    perceptual_loss_on_logits: True
+    reconstruction_loss: "l2"
+    reconstruction_weight: 4.0
+    discriminator_start: 20_000
+    discriminator_loss: "hinge"
+    discriminator_factor: 1.0
+    discriminator_weight: 0.02
+    discriminator_gradient_penalty: "none"
+    discriminator_penalty_cost: 10.0
+    lecam_regularization_weight: 0.001
+    entropy_annealing_steps: 2000
+    entropy_annealing_factor: 2.0
+
+dataset:
+    params:
+        train_shards_path_or_url: "DATA_PATH/imagenet_shards/train/imagenet-train-{0000..0252}.tar"
+        eval_shards_path_or_url: "DATA_PATH/imagenet_shards/val/imagenet-val-{0000..0009}.tar"
+        shuffle_buffer_size: 1000
+        num_workers_per_gpu: 8
+        pin_memory: True
+        persistent_workers: True
+    preprocessing:
+        resolution: 256
+        use_aspect_ratio_aug: True
+        use_random_crop: True
+        min_scale: 0.8
+        interpolation: "bilinear"
+
+
+optimizer:
+    name: adamw 
+    params: # default adamw params
+        learning_rate: 1e-4
+        discriminator_learning_rate: 1e-4
+        scale_lr: False # scale learning rate by total batch size
+        beta1: 0.9
+        beta2: 0.999
+        weight_decay: 1e-4
+        epsilon: 1e-8
+
+
+lr_scheduler:
+    scheduler: "cosine_with_minimum"
+    params:
+        learning_rate: ${optimizer.params.learning_rate}
+        warmup_steps: 5_000
+
+
+training:
+    gradient_accumulation_steps: 1
+    per_gpu_batch_size: 16
+    mixed_precision: "no"  # "bf16"
+    enable_tf32: True
+    use_ema: True
+    seed: 42
+    max_train_steps: 1_350_000
+    overfit_batch: False
+    overfit_batch_num: 1
+    num_generated_images: 2  # Must be smaller than or equal to per_gpu_batch_size
+    max_grad_norm: 1.0
