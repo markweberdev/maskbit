@@ -78,14 +78,24 @@ Please first follow the install guide and the [data preparation doc](https://git
 We use the accelerate library for multi-device training, which means the following command needs to be started on each worker:
 
 ```python3
-PYTHONPATH=./ WORKSPACE=./ accelerate launch --num_machines=1  --machine_rank=0 --main_process_ip=127.0.0.1 --main_process_port=9999 --same_network scripts/train_maskbit.py config=./configs/tokenizer/maskbit_tokenizer_10bit.yaml
+PYTHONPATH=./ WORKSPACE=./ accelerate launch --num_machines=1  --machine_rank=0 --main_process_ip=127.0.0.1 --main_process_port=9999 --same_network scripts/train_tokenizer.py config=./configs/tokenizer/maskbit_tokenizer_10bit.yaml
 ```
 
 For more instructions on how to use the accelerate library, we refer to their [website](https://huggingface.co/docs/accelerate/v1.2.0/en/index). Moreover, run specific config changes can also be done by passing the config changes on the command line. For example ```training.per_gpu_batch_size=32``` would use a batchsize of 32 for this run.
 
 ### Generator (Stage-II)
 
-Coming soon.
+Please first follow the install guide and the [data preparation doc](https://github.com/markweberdev/maskbit/blob/main/docs/prepare_data.md). 
+
+We use the accelerate library for multi-device training, which means the following command needs to be started on each worker:
+
+```python3
+PYTHONPATH=./ WORKSPACE=./ accelerate launch --num_machines=1  --machine_rank=0 --main_process_ip=127.0.0.1 --main_process_port=9999 --same_network scripts/train_maskbit.py config=./configs/generator/maskbit_geenrator_10bit.yaml
+```
+
+For more instructions on how to use the accelerate library, we refer to their [website](https://huggingface.co/docs/accelerate/v1.2.0/en/index). Moreover, run specific config changes can also be done by passing the config changes on the command line. For example ```training.per_gpu_batch_size=32``` would use a batchsize of 32 for this run.
+
+We will release checkpoints and configs for the generator soon.
 
 ## Testing on ImageNet-1K Benchmark
 
