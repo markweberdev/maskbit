@@ -8,7 +8,7 @@
 
 </div>
 
-This repository contains an implementation of the paper "MaskBit: Embedding-free Image Generation via Bit Tokens".
+This repository contains an implementation of the paper "MaskBit: Embedding-free Image Generation via Bit Tokens" accepted to TMLR with **featured and reproducibility certifications**.
 
 We present a modernized VQGAN+ and a novel image generation framework leveraging bit tokens. As a result, MaskBit uses a shared representation in the tokenizer and generator, which yields state-of-the-art results (at time of publication) while using a significantly smaller model compared to autoregressive models. 
 
@@ -36,6 +36,9 @@ We present a modernized VQGAN+ and a novel image generation framework leveraging
 
 
 ## Model Zoo
+
+All models are trained on ImageNet with an input shape of 256x256. All models downsample the images to a spatial size of 16x16, leading to a latent representation of 16x16xK bits per image.
+
 | Model | Link | reconstruction FID | config | 
 | ------------- | ------------- | ------------- | ------------- |
 | VQGAN+ (10 bits, from the paper) | [checkpoint](https://huggingface.co/markweber/vqgan_plus_paper)| 1.67 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/tokenizer/vqgan_plus_10bit.yaml) |
@@ -105,7 +108,7 @@ Coming soon.
 | Model | reconstruction FID | Inception Score | LPIPS | PSNR | SSIM | Codebook Usage |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | VQGAN+ (10 bits, from the paper) | 1.67 | 186.5 | 0.328 | 20.9 | 0.53 | 1.0 |
-| VQGAN+ (10 bits) | 1.52 |  | | | |
+| VQGAN+ (10 bits) | 1.52 | 182.4 | 0.317 | 21.1 | 0.54 | 1.0 |
 | VQGAN+ (12 bits) | 1.39 | 193.9 | 0.315 | 21.0 | 0.55 | 1.0 |
 | ------------- | ------- | ------- | ------- | ------- | ------- | ------- |
 | MaskBit-Tokenizer (10 bits) | 1.76 | 177.6 | 0.315 | 20.8 | 0.53 | 1.0 |
