@@ -115,20 +115,20 @@ Coming soon.
 
 ## Detailed Results
 
-| Model | reconstruction FID | Inception Score | LPIPS | PSNR | SSIM | Codebook Usage |
+| Model | reconstruction FID | Inception Score | PSNR | SSIM | Codebook Usage |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| VQGAN+ (10 bits, from the paper) | 1.67 | 186.5 | 0.328 | 20.9 | 0.53 | 1.0 |
-| VQGAN+ (10 bits) | 1.52 | 182.4 | 0.317 | 21.1 | 0.54 | 1.0 |
-| VQGAN+ (12 bits) | 1.39 | 193.9 | 0.315 | 21.0 | 0.55 | 1.0 |
+| VQGAN+ (10 bits, from the paper) | 1.67 | 186.5 | 20.9 | 0.53 | 1.0 |
+| VQGAN+ (10 bits) | 1.52 | 182.4 | 21.1 | 0.54 | 1.0 |
+| VQGAN+ (12 bits) | 1.39 | 193.9 | 21.0 | 0.55 | 1.0 |
 | ------------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| MaskBit-Tokenizer (10 bits) | 1.76 | 177.6 | 0.315 | 20.8 | 0.53 | 1.0 |
-| MaskBit-Tokenizer (12 bits) | 1.52 | 184.3 | 0.298 | 21.2 | 0.55 | 1.0 |
-| MaskBit-Tokenizer (14 bits) | 1.37 | 190.3 | 0.286 | 21.5 | 0.56 | 1.0 |
-| MaskBit-Tokenizer (16 bits) | 1.29 | 193.6 | 0.278 | 21.8 | 0.58 | 1.0 |
-| MaskBit-Tokenizer (18* bits) | 1.16 | 197.8 | 0.270 | 22.0 | 0.59 | 0.5 |
+| MaskBit-Tokenizer (10 bits) | 1.76 | 177.6 | 20.8 | 0.53 | 1.0 |
+| MaskBit-Tokenizer (12 bits) | 1.52 | 184.3 | 21.2 | 0.55 | 1.0 |
+| MaskBit-Tokenizer (14 bits) | 1.37 | 190.3 | 21.5 | 0.56 | 1.0 |
+| MaskBit-Tokenizer (16 bits) | 1.29 | 193.6 | 21.8 | 0.58 | 1.0 |
+| MaskBit-Tokenizer (18* bits) | 1.16 | 197.8 | 22.0 | 0.59 | 0.5 |
 | ------------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| Taming-VQGAN (10 bits) | 7.96 | 115.9 | 0.306 | 20.18 | 0.52 | 1.0 |
-| MaskGIT-Tokenizer (10 bits) | 1.96 | 178.3 | 0.331 | 18.6 | 0.47 | 0.45 |
+| Taming-VQGAN (10 bits) | 7.96 | 115.9 | 20.18 | 0.52 | 1.0 |
+| MaskGIT-Tokenizer (10 bits) | 1.96 | 178.3 | 18.6 | 0.47 | 0.45 |
 
 ## Citing
 If you use our work in your research, please use the following BibTeX entry.
