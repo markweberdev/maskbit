@@ -39,6 +39,8 @@ We present a modernized VQGAN+ and a novel image generation framework leveraging
 
 All models are trained on ImageNet with an input shape of 256x256. All models downsample the images to a spatial size of 16x16, leading to a latent representation of 16x16xK bits per image.
 
+### Tokenizer
+
 | Model | Link | reconstruction FID | config | 
 | ------------- | ------------- | ------------- | ------------- |
 | VQGAN+ (10 bits, from the paper) | [checkpoint](https://huggingface.co/markweber/vqgan_plus_paper)| 1.67 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/tokenizer/vqgan_plus_10bit.yaml) |
@@ -58,8 +60,24 @@ All models are trained on ImageNet with an input shape of 256x256. All models do
 
 Since the initial release of the paper, we have made some small changes and to the training recipe to improve the reconstruction quality of the tokenizer. 
 
-Please note that these models are trained only on limited academic dataset ImageNet, and they are only for research purposes. We will release the Stage-II models soon.
+Please note that these models are trained only on limited academic dataset ImageNet, and they are only for research purposes.
 
+### Generator
+
+| Model | Link | generation FID | config | 
+| ------------- | ------------- | ------------- | ------------- |
+| MaskBit-Generator (10 bits), 64 steps | Coming soon | 1.68 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_10bit.yaml) |
+| MaskBit-Generator (12 bits), 64 steps | Coming soon | 1.65 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_12bit.yaml) |
+| MaskBit-Generator (14 bits), 64 steps | Coming soon | 1.62 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit.yaml) |
+| MaskBit-Generator (16 bits), 64 steps | Coming soon | 1.64 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_16bit.yaml) |
+| MaskBit-Generator (18 bits), 64 steps | Coming soon | 1.67 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_18bit.yaml) |
+| ------------- | ------------- | ------------- | ------------- |
+| MaskBit-Generator (14 bits), 128 steps | Coming soon | 1.56 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit_128steps.yaml) |
+| MaskBit-Generator (14 bits), 256 steps | Coming soon | 1.52 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit_256steps.yaml)  |
+
+Test-time hyper-parameters such as `randomize_temperature`, `guidance_scale`, `scale_pow`, and `num_steps` can be tuned after training on any model. The optimal choice for these hyper-parameters can vary per model configuration. `num_steps` is the main hyper-parameter to control the speed-performance trade-off during training and inference. 
+
+Please note that these models are trained only on limited academic dataset ImageNet, and they are only for research purposes. We will release the Stage-II models soon.
 
 ## Installation
 

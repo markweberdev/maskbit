@@ -9,7 +9,6 @@ experiment:
     log_grad_norm_every: 100_000
     logger: "tensorboard"
     resume: True
-    sync_to_hdfs: True
     init_checkpoint: ""
     # vqgan_checkpoint: "MODEL_PATH/vqgan_plus_12bit.bin"  # Only for evaluating a trained model
 
