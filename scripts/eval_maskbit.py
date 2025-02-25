@@ -22,22 +22,22 @@ TRAIN_SET_STATISTICS_512 = "train_imagenet512_stats.npz"
 
 
 @torch.no_grad()
-def get_tokenizer(config, vqgan_path):
-    vqgan_model = ConvVQModel(config.model.vq_model, legacy=False)
-    vqgan_model.load_pretrained(vqgan_path)
-    vqgan_model.eval()
-    vqgan_model.requires_grad_(False)
-    return vqgan_model
+def get_tokenizer(config, tokenizer_path):
+    tokenizer_model = ConvVQModel(config.model.vq_model, legacy=False)
+    tokenizer_model.load_pretrained(tokenizer_path)
+    tokenizer_model.eval()
+    tokenizer_model.requires_grad_(False)
+    return tokenizer_model
 
 
 @torch.no_grad()
-def get_generator(config, mlm_path):
+def get_generator(config, generator_path):
     stage2_model_cls = {
         "bert": Bert,
         "lfq_bert": LFQBert,
     }[config.model.mlm_model.model_cls]
     
-    mlm_model = stage2_model_cls(
+    generator_model = stage2_model_cls(
         img_size=config.dataset.preprocessing.resolution,
         hidden_dim=config.model.mlm_model.hidden_dim,
         codebook_size=config.model.vq_model.codebook_size,
@@ -50,18 +50,18 @@ def get_generator(config, mlm_path):
         input_stride=2**(config.model.vq_model.num_resolutions - 1)
     )
     rename_dict = {"token_emb": "input_proj"}
-    mlm_model.load_pretrained(mlm_path, rename_keys=rename_dict)
-    mlm_model.eval()
-    mlm_model.requires_grad_(False)
-    return mlm_model
+    generator_model.load_pretrained(generator_path, rename_keys=rename_dict)
+    generator_model.eval()
+    generator_model.requires_grad_(False)
+    return generator_model
 
 
 def main(
     config_file,
     batchsize: int = 100,
     res: int = 256,
-    vqgan_path: str = "",
-    mlm_path: str = "",
+    tokenizer_path: str = "",
+    generator_path: str = "",
     device: str = "cuda:0",
 ):
     config = OmegaConf.load(config_file)
@@ -79,16 +79,16 @@ def main(
         num_codebook_entries = config.model.vq_model.codebook_size
         config.model.mlm_model.mask_token = int(2 ** (math.log2(num_codebook_entries) // config.model.mlm_model.codebook_splits))
 
-    vqgan_model = get_tokenizer(config, vqgan_path).to(device)
-    mlm_model = get_generator(config, mlm_path).to(device)
+    tokenizer_model = get_tokenizer(config, tokenizer_path).to(device)
+    generator_model = get_generator(config, generator_path).to(device)
 
     ##################################
     # EVALUATION STUFF.              #
     ##################################
     with torch.no_grad():
 
-        vqgan_model.eval()
-        mlm_model.eval()
+        tokenizer_model.eval()
+        generator_model.eval()
         total_samples = 50_000
 
         generated_list = []
@@ -112,8 +112,8 @@ def main(
             y = labels[batchsize*i: batchsize*(i+1)].long()
 
             generated_samples, _ = sample(
-                mlm_model,
-                vqgan_model,
+                generator_model,
+                tokenizer_model,
                 num_samples=batchsize,
                 labels=y,
                 softmax_temperature=1.0,
@@ -178,8 +178,8 @@ if __name__ == "__main__":
     parser.add_argument('--config', type=str, help='Path to the config file')
     parser.add_argument('--batchsize', type=int, default=100, help='Batchsize (int).')
     parser.add_argument('--res', type=int, default=256, help='Resolution (int).')
-    parser.add_argument('--vqgan', type=str, help='Path to the vqgan file')
-    parser.add_argument('--mlm', type=str, help='Path to the mlm file')
+    parser.add_argument('--tokenizer', type=str, help='Path to the tokenizer file')
+    parser.add_argument('--generator', type=str, help='Path to the generator file')
     parser.add_argument('--device', type=str, default="cuda:0", help='Device')
 
     args = parser.parse_args()
@@ -188,7 +188,7 @@ if __name__ == "__main__":
         config_file=args.config,
         batchsize=args.batchsize,
         res=args.res,
-        vqgan_path=args.vqgan,
-        mlm_path=args.mlm,
+        tokenizer_path=args.tokenizer,
+        generator_path=args.generator,
         device=args.device
     )
