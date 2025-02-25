@@ -1,17 +1,20 @@
 # This file contains the ADM eval suite for generation on ImageNet-1K
 
+import os
+import requests
 from typing import Iterable
 import warnings
 import random
 
 import numpy as np
 from scipy import linalg
+import tqdm
 
 import tensorflow.compat.v1 as tf
 
 
-# INCEPTION_V3_URL = "https://openaipublic.blob.core.windows.net/diffusion/jul-2021/ref_batches/classify_image_graph_def.pb"
-INCEPTION_V3_PATH = "/opt/tiger/workspace/models/classify_image_graph_def.pb"
+INCEPTION_V3_URL = "https://openaipublic.blob.core.windows.net/diffusion/jul-2021/ref_batches/classify_image_graph_def.pb"
+INCEPTION_V3_PATH = "classify_image_graph_def.pb"
 
 FID_POOL_NAME = "pool_3:0"
 FID_SPATIAL_NAME = "mixed_6/conv:0"
@@ -145,7 +148,21 @@ class Evaluator:
         return float(np.mean(scores))
 
 
+def _download_inception_model():
+    if os.path.exists(INCEPTION_V3_PATH):
+        return
+    print("downloading InceptionV3 model...")
+    with requests.get(INCEPTION_V3_URL, stream=True) as r:
+        r.raise_for_status()
+        tmp_path = INCEPTION_V3_PATH + ".tmp"
+        with open(tmp_path, "wb") as f:
+            for chunk in tqdm.tqdm(r.iter_content(chunk_size=8192)):
+                f.write(chunk)
+        os.rename(tmp_path, INCEPTION_V3_PATH)
+
+
 def _create_feature_graph(input_batch):
+    _download_inception_model()
     prefix = f"{random.randrange(2**32)}_{random.randrange(2**32)}"
     with open(INCEPTION_V3_PATH, "rb") as f:
         graph_def = tf.GraphDef()
@@ -162,6 +179,7 @@ def _create_feature_graph(input_batch):
 
 
 def _create_softmax_graph(input_batch):
+    _download_inception_model()
     prefix = f"{random.randrange(2**32)}_{random.randrange(2**32)}"
     with open(INCEPTION_V3_PATH, "rb") as f:
         graph_def = tf.GraphDef()
