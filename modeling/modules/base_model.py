@@ -4,6 +4,7 @@ We thank the following public implementations for inspiring this code:
     https://github.com/huggingface/open-muse/blob/main/muse/modeling_utils.py
 """
 
+import copy
 import os
 from typing import Union, Callable, Tuple, Dict, Optional, List
 
@@ -87,7 +88,8 @@ class BaseModel(torch.nn.Module):
         self,
         pretrained_model_path: Union[str, os.PathLike],
         strict_loading: bool = True,
-        torch_dtype: Optional[torch.dtype] = None
+        torch_dtype: Optional[torch.dtype] = None,
+        rename_keys: Optional[Dict[str, str]] = None,
     ):
         """ Instantiate a pretrained pytorch model from a weights path.
 
@@ -100,6 +102,8 @@ class BaseModel(torch.nn.Module):
                 architecture of this model.
             torch_dtype -> Optional[torch.dtype]: The dtype to use for the model. Defaults to `None`, which means
                 no conversion.
+            rename_keys -> Optional[Dict[str, str]]: A dictionary containing the keys to rename.
+                Defaults to `None`, which means no renaming.
         """
         if os.path.isfile(pretrained_model_path):
             model_file = pretrained_model_path
@@ -113,6 +117,17 @@ class BaseModel(torch.nn.Module):
             raise ValueError(f"{pretrained_model_path} does not exist")
 
         checkpoint = torch.load(model_file, map_location="cpu")
+        new_checkpoint = copy.deepcopy(checkpoint)
+
+        if rename_keys is not None:
+            for p_key in checkpoint:
+                for r_key in rename_keys:
+                    if p_key.startswith(r_key):
+                        new_checkpoint[p_key.replace(r_key, rename_keys[r_key])] = checkpoint[p_key]
+                        new_checkpoint.pop(p_key)
+                        break
+
+            checkpoint = new_checkpoint
 
         self.load_state_dict(checkpoint, strict=strict_loading)
 
@@ -168,4 +183,3 @@ class BaseModel(torch.nn.Module):
             return sum(p.numel() for p in non_embedding_parameters if p.requires_grad or not only_trainable)
         else:
             return sum(p.numel() for p in self.parameters() if p.requires_grad or not only_trainable)
-
