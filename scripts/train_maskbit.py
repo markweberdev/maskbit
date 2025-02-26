@@ -475,11 +475,8 @@ def main():
                         config,
                         input_tokens[:config.training.num_generated_images],
                         predicted_tokens[:config.training.num_generated_images],
-                        masks[:config.training.num_generated_images],
-                        fnames[:config.training.num_generated_images],
                         accelerator,
                         global_step+1,
-                        output_dir
                     )
 
                     if config.training.get("use_ema", False):
