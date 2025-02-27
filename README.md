@@ -30,6 +30,7 @@ We present a modernized VQGAN+ and a novel image generation framework leveraging
 
 
 ## Updates
+- 02/26/2025: Generator models, evaluation and demo.
 - 12/06/2024: Code release and tokenizer models. 
 - 12/01/2024: Accepted to TMLR with **featured and reproducibility certifications**. 
 - 09/24/2024: The [tech report](https://arxiv.org/abs/2409.16211) of MaskBit is available.
