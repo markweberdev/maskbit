@@ -30,6 +30,7 @@ We present a modernized VQGAN+ and a novel image generation framework leveraging
 
 
 ## Updates
+- 02/26/2025: Generator models, evaluation and demo.
 - 12/06/2024: Code release and tokenizer models. 
 - 12/01/2024: Accepted to TMLR with **featured and reproducibility certifications**. 
 - 09/24/2024: The [tech report](https://arxiv.org/abs/2409.16211) of MaskBit is available.
@@ -66,18 +67,18 @@ Please note that these models are trained only on limited academic dataset Image
 
 | Model | Link | generation FID | config | 
 | ------------- | ------------- | ------------- | ------------- |
-| MaskBit-Generator (10 bits), 64 steps | Coming soon | 1.68 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_10bit.yaml) |
-| MaskBit-Generator (12 bits), 64 steps | Coming soon | 1.65 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_12bit.yaml) |
-| MaskBit-Generator (14 bits), 64 steps | Coming soon | 1.62 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit.yaml) |
-| MaskBit-Generator (16 bits), 64 steps | Coming soon | 1.64 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_16bit.yaml) |
-| MaskBit-Generator (18 bits), 64 steps | Coming soon | 1.67 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_18bit.yaml) |
+| MaskBit-Generator (10 bits), 64 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_10bit) | 1.68 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_10bit.yaml) |
+| MaskBit-Generator (12 bits), 64 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_12bit) | 1.65 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_12bit.yaml) |
+| MaskBit-Generator (14 bits), 64 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_14bit) | 1.62 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit.yaml) |
+| MaskBit-Generator (16 bits), 64 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_16bit) | 1.64 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_16bit.yaml) |
+| MaskBit-Generator (18 bits), 64 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_18bit) | 1.67 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_18bit.yaml) |
 | ------------- | ------------- | ------------- | ------------- |
-| MaskBit-Generator (14 bits), 128 steps | Coming soon | 1.56 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit_128steps.yaml) |
-| MaskBit-Generator (14 bits), 256 steps | Coming soon | 1.52 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit_256steps.yaml)  |
+| MaskBit-Generator (14 bits), 128 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_14bit) | 1.56 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit_128steps.yaml) |
+| MaskBit-Generator (14 bits), 256 steps | [checkpoint](https://huggingface.co/markweber/maskbit_generator_14bit) | 1.52 | [config](https://github.com/markweberdev/maskbit/blob/main/configs/generator/maskbit_generator_14bit_256steps.yaml)  |
 
 Test-time hyper-parameters such as `randomize_temperature`, `guidance_scale`, `scale_pow`, and `num_steps` can be tuned after training on any model. The optimal choice for these hyper-parameters can vary per model configuration. `num_steps` is the main hyper-parameter to control the speed-performance trade-off during training and inference. 
 
-Please note that these models are trained only on limited academic dataset ImageNet, and they are only for research purposes. We will release the Stage-II models soon.
+Please note that these models are trained only on limited academic dataset ImageNet, and they are only for research purposes.
 
 ## Installation
 
@@ -113,8 +114,6 @@ PYTHONPATH=./ WORKSPACE=./ accelerate launch --num_machines=1  --machine_rank=0 
 
 For more instructions on how to use the accelerate library, we refer to their [website](https://huggingface.co/docs/accelerate/v1.2.0/en/index). Moreover, run specific config changes can also be done by passing the config changes on the command line. For example ```training.per_gpu_batch_size=32``` would use a batchsize of 32 for this run.
 
-We will release checkpoints and configs for the generator soon.
-
 ## Testing on ImageNet-1K Benchmark
 
 ### Tokenizer (Stage-I)
@@ -129,7 +128,15 @@ PYTHONPATH=./ python3 scripts/eval_tokenizer.py config=./configs/tokenizer/maskb
 
 ### Generator (Stage-II)
 
-Coming soon.
+Please first follow the install guide.
+
+After choosing the model config and checkpoint, the following command will run the evaluation:
+
+```python3
+PYTHONPATH=./ python3 scripts/eval_maskbit.py --config configs/generator/maskbit_generator_10bit.yaml --tokenizer /PATH_TO_MODEL/maskbit_tokenizer_10bit.bin --generator /PATH_TO_MODEL/maskbit_generator_10bit.bin --res 256 --device "cuda:0"
+```
+
+We note that the obtained results can vary for each run due to the randomness in the process. The numbers reported in the paper are obtained via hyper-parameter tuning and obtained from a single run. 
 
 ## Detailed Results
 

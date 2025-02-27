@@ -7,6 +7,7 @@ experiment:
     generate_every: 10_000
     log_every: 50
     log_grad_norm_every: 100_000
+    logger: "tensorboard"
     resume: True
     vqgan_checkpoint: "MODEL_PATH/maskbit_tokenizer_14bit.bin"
 

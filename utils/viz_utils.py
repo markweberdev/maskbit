@@ -1,25 +1,20 @@
 """ This file contains some utils functions for visualization."""
 
-from typing import Optional, Tuple, List
-import math
+from typing import Tuple, List
 
-import numpy as np
 import torch
 import torchvision.transforms.functional as F
 
-import matplotlib.pyplot as plt
-from matplotlib import cm
-
+from PIL import Image
 from einops import rearrange
 
 
 def make_viz_from_samples(
     original_images: torch.Tensor,
     reconstructed_images: torch.Tensor,
-) -> Tuple[List[plt.Figure], torch.Tensor]:
+) -> Tuple[List[Image.Image], torch.Tensor]:
     """
     Creates a visualization of the samples.
-    If codebook_indices is given, the codebook is visualized.
 
     Args:
         original_images -> torch.Tensor: The original images.
@@ -52,7 +47,7 @@ def make_viz_from_samples(
 def make_viz_reconstructed_stage_two(
     reconstructed: torch.Tensor,
     predicted: torch.Tensor
-) -> Tuple[List[plt.Figure], torch.Tensor]:
+) -> Tuple[List[Image.Image], torch.Tensor]:
     """
     Creates a visualization of the reconstructed and predicted samples.
 
@@ -76,7 +71,7 @@ def make_viz_reconstructed_stage_two(
 
 def make_viz_generated_stage_two(
     generated: torch.Tensor,
-)-> Tuple[List[plt.Figure], torch.Tensor]:
+)-> Tuple[Image.Image, torch.Tensor]:
     """
     Creates a visualization of the generated samples.
 

@@ -1,6 +1,7 @@
 """This file contains the definition of the sampling function."""
 
 from typing import Optional, Tuple, List, Text
+import tqdm
 
 import torch
 
@@ -26,6 +27,7 @@ def sample(
     scale_pow: float = 4.0,
     codebook_size: int = 1024,
     codebook_splits: int = 1,
+    use_tqdm: bool = False,
 ) -> Tuple[torch.Tensor, List[torch.Tensor]]:
     """Sample from the model.
 
@@ -67,11 +69,16 @@ def sample(
     masked_tokens = torch.full((num_samples, spatial_size, num_splits), mask_token, device=device)
     num_maskable = spatial_size * num_splits
     mask = (masked_tokens == mask_token)
-    num_sampled = torch.zeros_like(masked_tokens, dtype=torch.int)
+
     l_full_tokens = []
     gumbel = torch.distributions.Gumbel(loc=0.0, scale=1.0)
 
-    for i in range(num_steps):
+    if use_tqdm:
+        step_iterable = tqdm.tqdm(range(num_steps), desc="Sampling steps", position=1)
+    else:
+        step_iterable = range(num_steps)
+
+    for i in step_iterable:
         progress = (i + 1) / num_steps
         if guidance_scale != 0.0:
             logits = model(
@@ -121,7 +128,6 @@ def sample(
         should_mask = (confidence <= threshold.unsqueeze(-1).unsqueeze(-1))
         masked_tokens = torch.where(should_mask, mask_token, predicted_tokens)
         mask = (masked_tokens == mask_token)
-        num_sampled += torch.where(should_mask, 0, 1)
         l_full_tokens.append(predicted_tokens)
 
     predicted_tokens = combine_factorized_tokens(predicted_tokens, codebook_size, codebook_splits)
