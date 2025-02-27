@@ -1,0 +1,26 @@
+model:
+    vq_model:
+        model_class: "vqgan+"
+        quantizer_type: "lookup-free"
+        codebook_size: 16384
+        token_size: 14
+        commitment_cost: 0.25
+        entropy_loss_weight: 0.02
+        entropy_loss_temperature: 0.01
+        entropy_gamma: 1.0
+        num_channels: 3  # rgb
+        hidden_channels: 128
+        channel_mult: [1,1,2,2,4]
+        num_resolutions: 5
+        num_res_blocks: 2
+        sample_with_conv: True
+    
+    mlm_model:
+        model_cls: "lfq_bert"
+        hidden_dim: 1024
+        depth: 24
+        heads: 16
+        mlp_dim: 4096
+        dropout: 0.1
+        codebook_splits: 2
+        use_prenorm: False
