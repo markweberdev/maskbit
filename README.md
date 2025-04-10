@@ -30,6 +30,7 @@ We present a modernized VQGAN+ and a novel image generation framework leveraging
 
 
 ## Updates
+- 04/25/2025: Presented @ ICLR 2025
 - 02/26/2025: Generator models, evaluation and demo.
 - 12/06/2024: Code release and tokenizer models. 
 - 12/01/2024: Accepted to TMLR with **featured and reproducibility certifications**. 
@@ -159,10 +160,14 @@ We note that the obtained results can vary for each run due to the randomness in
 If you use our work in your research, please use the following BibTeX entry.
 
 ```BibTeX
-@article{weber2024maskbit,
-  author    = {Mark Weber and Lijun Yu and Qihang Yu and Xueqing Deng and Xiaohui Shen and Daniel Cremers and Liang-Chieh Chen},
-  title     = {MaskBit: Embedding-free Image Generation via Bit Tokens},
-  journal   = {arXiv:2409.16211},
-  year      = {2024}
+@article{
+weber2024maskbit,
+title={MaskBit: Embedding-free Image Generation via Bit Tokens},
+author={Mark Weber and Lijun Yu and Qihang Yu and Xueqing Deng and Xiaohui Shen and Daniel Cremers and Liang-Chieh Chen},
+journal={Transactions on Machine Learning Research},
+issn={2835-8856},
+year={2024},
+url={https://openreview.net/forum?id=NYe2JuN3v3},
+note={Featured Certification, Reproducibility Certification}
 }
 ```
